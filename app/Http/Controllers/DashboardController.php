@@ -184,14 +184,20 @@ class DashboardController extends Controller
         }
 
         // Validasi
-        $validated = $request->validate([
+        $rules = [
             'nama' => 'required|string|max:255',
             'nip' => 'required|string|max:50|unique:dosens,nip,' . $dosen->id,
             'email' => 'required|string|email|max:255|unique:dosens,email,' . $dosen->id,
             'user_email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
             'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        ];
+
+        // Jika password diisi, wajib ada konfirmasi
+        if ($request->filled('password')) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+
+        $validated = $request->validate($rules);
 
         // Update user email
         $user->email = $validated['user_email'];

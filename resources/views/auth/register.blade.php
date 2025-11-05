@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Akun - Sistem Penilaian Akademik</title>
+    <title>Registrasi Akun - Sistem Penilaian Akademik</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
@@ -120,8 +123,8 @@
 <body>
     <div class="register-card">
         <div class="register-header">
-            <h1>Daftar Akun Baru</h1>
-            <p>Buat akun untuk mengakses sistem</p>
+            <h1 id="main-title">Registrasi Akun</h1>
+            <p id="sub-title">Buat akun untuk mengakses sistem</p>
         </div>
         <form method="POST" action="{{ route('register.perform') }}">
             @csrf
@@ -151,8 +154,9 @@
                 <label for="role" class="form-label">Daftar Sebagai</label>
                 <select id="role" name="role" required class="form-select" onchange="toggleRoleFields()">
                     <option value="">Pilih peran</option>
-                    <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
                     <option value="dosen" {{ old('role') == 'dosen' ? 'selected' : '' }}>Dosen</option>
+                    <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                    
                 </select>
                 @error('role')
                     <span class="error-message">{{ $message }}</span>
@@ -241,6 +245,8 @@
             const role = document.getElementById('role').value;
             const mahasiswaFields = document.getElementById('mahasiswa-fields');
             const dosenFields = document.getElementById('dosen-fields');
+            const mainTitle = document.getElementById('main-title');
+            const subTitle = document.getElementById('sub-title');
             
             // Reset required attributes
             const mahasiswaInputs = mahasiswaFields.querySelectorAll('input');
@@ -259,15 +265,21 @@
                 mahasiswaInputs.forEach(input => {
                     input.setAttribute('required', 'required');
                 });
+                mainTitle.textContent = 'Daftar Akun Mahasiswa';
+                subTitle.textContent = 'Buat akun mahasiswa untuk mengakses sistem';
             } else if (role === 'dosen') {
                 mahasiswaFields.style.display = 'none';
                 dosenFields.style.display = 'block';
                 dosenInputs.forEach(input => {
                     input.setAttribute('required', 'required');
                 });
+                mainTitle.textContent = 'Daftar Akun Dosen';
+                subTitle.textContent = 'Buat akun dosen untuk mengakses sistem';
             } else {
                 mahasiswaFields.style.display = 'none';
                 dosenFields.style.display = 'none';
+                mainTitle.textContent = 'Registrasi Akun';
+                subTitle.textContent = 'Buat akun untuk mengakses sistem';
             }
         }
         

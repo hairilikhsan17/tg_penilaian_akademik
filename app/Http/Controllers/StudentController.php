@@ -68,17 +68,25 @@ class StudentController extends Controller
         }
 
         // Validasi
-        $validated = $request->validate([
+        $rules = [
             'nama' => 'required|string|max:255',
             'nim' => 'required|string|max:50|unique:mahasiswas,nim,' . $mahasiswa->id,
             'email' => 'required|string|email|max:255|unique:mahasiswas,email,' . $mahasiswa->id,
             'user_email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'semester' => 'required|integer|min:1|max:8',
-            'password' => 'nullable|string|min:8|confirmed',
+            'jurusan' => 'required|string|max:255',
             'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        ];
 
-        // Update user email
+        // Jika password diisi, wajib ada konfirmasi
+        if ($request->filled('password')) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+
+        $validated = $request->validate($rules);
+
+        // Update user (email, nama, dan password jika ada)
+        $user->name = $validated['nama'];
         $user->email = $validated['user_email'];
         if ($request->filled('password')) {
             $user->password = Hash::make($validated['password']);
@@ -90,6 +98,7 @@ class StudentController extends Controller
         $mahasiswa->nim = $validated['nim'];
         $mahasiswa->email = $validated['email'];
         $mahasiswa->semester = $validated['semester'];
+        $mahasiswa->jurusan = $validated['jurusan'];
 
         // Handle upload foto profil
         if ($request->hasFile('foto_profil')) {

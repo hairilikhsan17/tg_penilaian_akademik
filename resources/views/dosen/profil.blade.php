@@ -125,7 +125,7 @@
         </div>
 
         <!-- Edit Mode -->
-        <form method="POST" action="{{ route('dosen.profil.update') }}" enctype="multipart/form-data" x-show="editing" @submit.prevent="editing = false">
+        <form method="POST" action="{{ route('dosen.profil.update') }}" enctype="multipart/form-data" x-show="editing">
             @csrf
             @method('PUT')
             

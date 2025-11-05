@@ -157,7 +157,7 @@
         </div>
 
         <!-- Edit Mode -->
-        <form method="POST" action="{{ route('mahasiswa.profile.update') }}" enctype="multipart/form-data" x-show="editing" @submit.prevent="editing = false">
+        <form method="POST" action="{{ route('mahasiswa.profile.update') }}" enctype="multipart/form-data" x-show="editing">
             @csrf
             @method('PUT')
             
@@ -252,6 +252,19 @@
                             @endfor
                         </select>
                         @error('semester')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Jurusan -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-gray-600">Jurusan <span class="text-red-500">*</span></label>
+                        <input type="text" 
+                               name="jurusan" 
+                               value="{{ old('jurusan', $mahasiswa->jurusan) }}" 
+                               required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('jurusan') border-red-500 @enderror">
+                        @error('jurusan')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
